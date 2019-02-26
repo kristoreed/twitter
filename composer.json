@@ -1,0 +1,26 @@
+{
+  "name": "kristoreed/twitter",
+  "type": "library",
+  "description": "",
+  "keywords": [
+    "twitter"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Krzysztof Trzcinka"
+    }
+  ],
+  "require": {
+    "php": "^7.2 || ^7.3",
+    "ext-curl": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kristoreed\\Twitter\\": "src"
+    }
+  }
+}
