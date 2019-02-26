@@ -5,7 +5,7 @@ namespace Kristoreed\Twitter\Authorization\OAuth;
 use Kristoreed\Twitter\Authorization\AuthorizationAbstract;
 
 /**
- * Authorization OAuth version 1.1 with signature method HMAC-SHA1
+ * Authorization OAuth version 1.0 with signature method HMAC-SHA1
  *
  * @author Krzysztof Trzcinka
  */
@@ -15,7 +15,7 @@ class One extends AuthorizationAbstract
     /**
      * OAuth version
      */
-    const OAUTH_VERSION = "1.1";
+    const OAUTH_VERSION = "1.0";
 
     /**
      * OAuth signature method
@@ -25,7 +25,8 @@ class One extends AuthorizationAbstract
     /**
      * {@inheritdoc}
      */
-    public function getCredential($methodName, $baseUrl, array $parameters) {
+    public function getCredential($methodName, $baseUrl, array $parameters)
+    {
         $signatureBaseElements = [
             $methodName,
             rawurlencode($baseUrl),
@@ -33,7 +34,43 @@ class One extends AuthorizationAbstract
         ];
 
         $signatureBase = implode("&", $signatureBaseElements);
-        return base64_encode(hash_hmac('sha1', $signatureBase, $this->getSignatureKey(), true));
+        $signature = base64_encode(hash_hmac('sha1', $signatureBase, $this->getSignatureKey(), true));
+
+        return $this->getAuthorizationHeader($signature);
+    }
+
+    /**
+     *
+     *
+     * @param $signature
+     *
+     * @return string
+     */
+    private function getAuthorizationHeader($signature)
+    {
+        $signatureDataElementsWithSignature = array_merge($this->getSignatureBaseData(), [
+            'oauth_signature' => $signature,
+        ]);
+
+        $authorizationHeader = "";
+        $firstElement = true;
+        foreach($signatureDataElementsWithSignature as $elementKey => $element) {
+            $elementPair = [
+                urlencode($elementKey),
+                '"' . urlencode($element) . '"',
+            ];
+
+            if($firstElement) {
+                $authorizationHeader .= 'Authorization: OAuth ' . implode("=", $elementPair);
+
+                $firstElement = false;
+                continue;
+            }
+
+            $authorizationHeader .= ',' . implode("=", $elementPair);
+        }
+
+        return $authorizationHeader;
     }
 
     /**
@@ -41,7 +78,8 @@ class One extends AuthorizationAbstract
      *
      * @return string
      */
-    private function getSignatureKey() {
+    private function getSignatureKey()
+    {
         $signatureKeyElements = [
             urlencode($this->configuration->getConsumerSecret()),
             urlencode($this->configuration->getOauthTokenSecret()),
@@ -57,7 +95,8 @@ class One extends AuthorizationAbstract
      *
      * @return string
      */
-    private function getSignatureData(array $parameters) {
+    public function getSignatureData(array $parameters)
+    {
         $signatureDataElements = array_merge($parameters, $this->getSignatureBaseData());
         uksort($signatureDataElements, 'strcmp');
 
@@ -74,7 +113,8 @@ class One extends AuthorizationAbstract
      *
      * @return array
      */
-    private function getSignatureBaseData() {
+    private function getSignatureBaseData()
+    {
         return [
             'oauth_version' => self::OAUTH_VERSION,
             'oauth_consumer_key' => $this->configuration->getConsumerKey(),
@@ -90,8 +130,10 @@ class One extends AuthorizationAbstract
      *
      * @return string
      */
-    private function getNonce() {
-        return md5(gethostname() . microtime());
+    private function getNonce()
+    {
+        return "pWKbsGInlZ3";
+        //return md5(gethostname() . microtime());
     }
 
     /**
@@ -99,8 +141,10 @@ class One extends AuthorizationAbstract
      *
      * @return string
      */
-    private function getTimestamp() {
-        return (string) time();
+    private function getTimestamp()
+    {
+        return "1551074666";
+        //return (string) time();
     }
 
 }

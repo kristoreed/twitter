@@ -83,25 +83,25 @@ class Configuration implements ConfigurationInterface
         }
         $this->apiVersion = $configuration['api']['version'];
 
-        if (empty($configuration['credential']['consumer_key'])) {
+        if (empty($configuration['api']['credential']['consumer_key'])) {
             throw new TwitterConfigurationException("Configuration paramiter missing: credential.consumer_key");
         }
-        $this->consumerKey = $configuration['credential']['consumer_key'];
+        $this->consumerKey = $configuration['api']['credential']['consumer_key'];
 
-        if (empty($configuration['credential']['consumer_secret'])) {
+        if (empty($configuration['api']['credential']['consumer_secret'])) {
             throw new TwitterConfigurationException("Configuration paramiter missing: credential.consumer_secret");
         }
-        $this->consumerSecret = $configuration['credential']['consumer_secret'];
+        $this->consumerSecret = $configuration['api']['credential']['consumer_secret'];
 
-        if (empty($configuration['credential']['oauth_token'])) {
+        if (empty($configuration['api']['credential']['oauth_token'])) {
             throw new TwitterConfigurationException("Configuration paramiter missing: credential.oauth_token");
         }
-        $this->oauthToken = $configuration['credential']['oauth_token'];
+        $this->oauthToken = $configuration['api']['credential']['oauth_token'];
 
-        if (empty($configuration['credential']['oauth_token'])) {
-            throw new TwitterConfigurationException("Configuration paramiter missing: credential.oauth_token");
+        if (empty($configuration['api']['credential']['oauth_token_secret'])) {
+            throw new TwitterConfigurationException("Configuration paramiter missing: credential.oauth_token_secret");
         }
-        $this->oauthTokenSecret = $configuration['credential']['oauth_token'];
+        $this->oauthTokenSecret = $configuration['api']['credential']['oauth_token_secret'];
     }
 
     /**

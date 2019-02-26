@@ -22,7 +22,7 @@ class RequestGet extends RequestAbstract
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->getUrl($endpoint, $parameters));
-        $headers[] = $this->authorization->getCredential(self::METHOD_NAME, $this->getUrlBase(), $parameters);
+        $headers[] = $this->authorization->getCredential(self::METHOD_NAME, $this->getUrlBase($endpoint), $parameters);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $serverOutput = curl_exec($ch);
         curl_close($ch);
