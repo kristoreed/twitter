@@ -87,7 +87,7 @@ $configuration = new Configuration($config['twitter']);
 $autorizationOauth2 = new AutorizationOauth2($configuration, $token);
 $requestGet= new RequestGet($configuration, $autorizationOauth2);
 $twitter = new TwitterApi($requestGet);
-$statusesJson = $twitter->tweet('statuses/user_timeline.json', ['screen_name' => 'JerzyMackiewicz']);
+$statusesJson = $twitter->tweet('statuses/user_timeline.json', ['screen_name' => 'twitterapi']);
 $statuses = json_decode($statusesJson, true);
 
 ```
