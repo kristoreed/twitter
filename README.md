@@ -1,12 +1,12 @@
 # Twitter api operator
 
-## Installation by composer
+## Composer installation
 ```
 composer require kristoreed/twitter
 ```
 ## Configuration file
-Add configuration file in location **config/autoload/twitter.global.php** with below structure. 
-You Can find it on https://developer.twitter.com in "Keys and tokens" App section.
+Add configuration file in project (e.g in Zend Framework in location **config/autoload/twitter.global.php**) with below presented structure.
+Twitter app's credenciales can be found on https://developer.twitter.com in section "Keys and tokens".
 
 ```php
 <?php
@@ -30,9 +30,9 @@ return [
 ```
 
 ## Examples 
-List of all Twitter's api avalible endpoints: https://developer.twitter.com/en/docs/api-reference-index
+_List of all Twitter's api endpoints are avalible on https://developer.twitter.com/en/docs/api-reference-index_
 
-### OAuth autorization with GET request
+### Request to selected endpoint with GET request and Oauth autorization
 
 ```php
 <?php
@@ -50,8 +50,8 @@ $statuses = json_decode($statusesJson, true);
 
 ```
 
-### Basic autorization with POST request
-Retrieving a bearer token for Oauth2
+### Basic autorization with POST request 
+_Retrieving a bearer token for Oauth2_
 
 ```php
 <?php
@@ -75,7 +75,9 @@ if(empty($token)) {
 
 ```
 
-### Oauth2 autorization with GET request
+### Request to selected endpoint with GET request and Oauth2 autorization 
+_Authorization with bearer token_
+
 ```php
 <?php
 use Kristoreed\Twitter\Authorization\AutorizationOauth2;
