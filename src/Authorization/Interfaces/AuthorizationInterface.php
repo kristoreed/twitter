@@ -18,5 +18,5 @@ interface AuthorizationInterface
      *
      * @return string
      */
-    public function getCredential($methodName, $baseUrl, array $parameters);
+    public function getCredential(string $methodName = null, string $baseUrl = null, array $parameters = []): string;
 }

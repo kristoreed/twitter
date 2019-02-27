@@ -32,5 +32,5 @@ abstract class AuthorizationAbstract implements AuthorizationInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function getCredential($methodName, $baseUrl, array $parameters);
+    abstract public function getCredential(string $methodName = null, string $baseUrl = null, array $parameters = []): string;
 }

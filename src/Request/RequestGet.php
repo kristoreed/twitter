@@ -18,45 +18,31 @@ class RequestGet extends RequestAbstract
     /**
      * {@inheritdoc}
      */
-    public function send($endpoint, array $parameters)
+    public function send(string $endpoint, array $parameters = []): string
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->getUrl($endpoint, $parameters));
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $this->getUrl($endpoint, $parameters));
         $headers[] = $this->authorization->getCredential(self::METHOD_NAME, $this->getUrlBase($endpoint), $parameters);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        $serverOutput = curl_exec($ch);
-        curl_close($ch);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $serverOutput = curl_exec($curl);
+        curl_close($curl);
 
         return $serverOutput;
     }
 
     /**
-     * Method create full request url
+     * Create full request url
      *
      * @param string endpoint
      * @param array $parameters
      *
      * @return string
      */
-    private function getUrl($endpoint, array $parameters)
+    private function getUrl(string $endpoint, array $parameters): string
     {
         $baseUrl = $this->getUrlBase($endpoint);
         return empty($parameters) ? $baseUrl : implode('?', [$baseUrl, http_build_query($parameters)]);
     }
 
-    /**
-     * Method create base url
-     *
-     * @param string $endpoint
-     *
-     * @return string
-     */
-    private function getUrlBase($endpoint)
-    {
-        return implode('/', [
-            $this->configuration->getApiHost(),
-            $this->configuration->getApiVersion(),
-            $endpoint,
-        ]);
-    }
 }

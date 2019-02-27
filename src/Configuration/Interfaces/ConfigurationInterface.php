@@ -14,41 +14,48 @@ interface ConfigurationInterface
      *
      * @return string
      */
-    public function getApiHost();
+    public function getApiHost(): string;
 
     /*
      * Return api version
      *
      * @return string
      */
-    public function getApiVersion();
+    public function getApiVersion(): string;
 
     /*
      * Return api consumer key
      *
      * @return string
      */
-    public function getConsumerKey();
+    public function getConsumerKey(): string;
 
     /*
      * Return api consumer secret
      *
      * @return string
      */
-    public function getConsumerSecret();
+    public function getConsumerSecret(): string;
 
     /*
      * Return api oauth token
      *
      * @return string
      */
-    public function getOauthToken();
+    public function getOauthToken(): string;
 
     /*
      * Return api oauth token secret
      *
      * @return string
      */
-    public function getOauthTokenSecret();
+    public function getOauthTokenSecret(): string;
+
+    /*
+     * Return api endpoint authentication prefix
+     *
+     * @return array
+     */
+    public function getAuthenticationPrefix(): array;
 
 }

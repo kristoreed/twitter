@@ -1,6 +1,6 @@
 <?php
 
-namespace Kristoreed\Twitter;
+namespace Kristoreed\Twitter\Request;
 
 /**
  * RequestPost
@@ -18,7 +18,19 @@ class RequestPost extends RequestAbstract
     /**
      * {@inheritdoc}
      */
-    public function send($endpoint, array $parameters) {
+    public function send(string $endpoint, array $parameters = []): string
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $this->getUrlBase($endpoint));
+        $headers[] = $this->authorization->getCredential(self::METHOD_NAME, $this->getUrlBase($endpoint), $parameters);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
+        $serverOutput = curl_exec($curl);
+        curl_close($curl);
+
+        return $serverOutput;
     }
+
 }

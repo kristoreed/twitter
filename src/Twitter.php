@@ -38,7 +38,7 @@ class Twitter
      *
      * @return string
      */
-    public function tweet($endpoint, array $parameters)
+    public function tweet(string $endpoint, array $parameters = []): string
     {
         return $this->request->send($endpoint, $parameters);
     }

@@ -14,18 +14,25 @@ use Kristoreed\Twitter\Request\Interfaces\RequestInterface;
 abstract class RequestAbstract implements RequestInterface
 {
     /**
-     * Handler of configuration
+     * Configuration handler
      *
      * @var ConfigurationInterface
      */
     protected $configuration;
 
     /**
-     * Handler of authorization
+     * Athorization handler
      *
      * @var AuthorizationInterface
      */
     protected $authorization;
+
+    /**
+     * Authentication handler
+     *
+     * @var bool
+     */
+    protected $authentication = false;
 
     /**
      * Twitter constructor
@@ -43,7 +50,71 @@ abstract class RequestAbstract implements RequestInterface
     }
 
     /**
+     * Set authentication
+     *
+     * @param bool $authentication
+     *
+     * @return $this
+     */
+    public function setAuthentication(bool $authentication): self
+    {
+        $this->authentication = $authentication;
+        return $this;
+    }
+
+    /**
+     * Check if authentication endpoint
+     * Base on configuration. Only authentication endpoints don't use version
+     *
+     * @param string $endpoint
+     *
+     * @return bool
+     */
+    protected function isAuthentication(string $endpoint): bool
+    {
+        $endpointElements = explode("/", $endpoint);
+        if (empty($endpointElements)) {
+            return false;
+        }
+
+        $authentication = false;
+        foreach ($endpointElements as $endpointElement) {
+            if (!in_array($endpointElement, $this->configuration->getAuthenticationPrefix())) {
+                continue;
+            }
+
+            $authentication = true;
+            break;
+        }
+
+        return $authentication;
+    }
+
+    /**
+     * Create full request url
+     *
+     * @param string endpoint
+     *
+     * @return string
+     */
+    protected function getUrlBase(string $endpoint): string
+    {
+        if (!$this->isAuthentication($endpoint)) {
+            return implode('/', [
+                $this->configuration->getApiHost(),
+                $this->configuration->getApiVersion(),
+                $endpoint,
+            ]);
+        }
+
+        return implode('/', [
+            $this->configuration->getApiHost(),
+            $endpoint,
+        ]);
+    }
+
+    /**
      * {@inheritdoc}
      */
-    abstract public function send($endpoint, array $parameters);
+    abstract public function send(string $endpoint, array $parameters = []): string;
 }

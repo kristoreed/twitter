@@ -18,5 +18,5 @@ interface RequestInterface
      *
      * @return string
      */
-    public function send($endpoint, array $parameters);
+    public function send(string $endpoint, array $parameters = []): string;
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kristoreed\Twitter\Authorization\OAuth;
+namespace Kristoreed\Twitter\Authorization;
 
 use Kristoreed\Twitter\Authorization\AuthorizationAbstract;
 
@@ -9,58 +9,72 @@ use Kristoreed\Twitter\Authorization\AuthorizationAbstract;
  *
  * @author Krzysztof Trzcinka
  */
-class One extends AuthorizationAbstract
+class AutorizationOauth extends AuthorizationAbstract
 {
 
     /**
-     * OAuth version
+     * Constant oauth version
      */
     const OAUTH_VERSION = "1.0";
 
     /**
-     * OAuth signature method
+     * Constant oauth signature method
      */
     const OAUTH_SIGNATURE_METHOD = "HMAC-SHA1";
 
     /**
      * {@inheritdoc}
      */
-    public function getCredential($methodName, $baseUrl, array $parameters)
+    public function getCredential(string $methodName = null, string $baseUrl = null, array $parameters = []): string
     {
+        $signatureBaseData = $this->getSignatureBaseData();
+
         $signatureBaseElements = [
             $methodName,
             rawurlencode($baseUrl),
-            rawurlencode($this->getSignatureData($parameters)),
+            rawurlencode($this->getSignatureData($parameters, $signatureBaseData)),
         ];
 
         $signatureBase = implode("&", $signatureBaseElements);
         $signature = base64_encode(hash_hmac('sha1', $signatureBase, $this->getSignatureKey(), true));
 
-        return $this->getAuthorizationHeader($signature);
+        return $this->getAuthorizationHeader($signature, $signatureBaseData);
     }
 
     /**
+     * Authorization header generator
      *
-     *
-     * @param $signature
+     * @param string $signature
      *
      * @return string
      */
-    private function getAuthorizationHeader($signature)
+    private function getAuthorizationHeader(string $signature, array $signatureBaseData): string
     {
-        $signatureDataElementsWithSignature = array_merge($this->getSignatureBaseData(), [
+        $signatureDataElementsWithSignature = array_merge($signatureBaseData, [
             'oauth_signature' => $signature,
         ]);
 
-        $authorizationHeader = "";
+        return $this->getHeader($signatureDataElementsWithSignature);
+    }
+
+    /**
+     * Header generator
+     *
+     * @param array $signatureDataElementsWithSignature
+     *
+     * @return string
+     */
+    private function getHeader(array $signatureDataElementsWithSignature): string
+    {
+        $authorizationHeader = null;
         $firstElement = true;
-        foreach($signatureDataElementsWithSignature as $elementKey => $element) {
+        foreach ($signatureDataElementsWithSignature as $elementKey => $element) {
             $elementPair = [
                 urlencode($elementKey),
                 '"' . urlencode($element) . '"',
             ];
 
-            if($firstElement) {
+            if ($firstElement) {
                 $authorizationHeader .= 'Authorization: OAuth ' . implode("=", $elementPair);
 
                 $firstElement = false;
@@ -78,7 +92,7 @@ class One extends AuthorizationAbstract
      *
      * @return string
      */
-    private function getSignatureKey()
+    private function getSignatureKey(): string
     {
         $signatureKeyElements = [
             urlencode($this->configuration->getConsumerSecret()),
@@ -95,9 +109,9 @@ class One extends AuthorizationAbstract
      *
      * @return string
      */
-    public function getSignatureData(array $parameters)
+    public function getSignatureData(array $parameters, array $signatureBaseData): string
     {
-        $signatureDataElements = array_merge($parameters, $this->getSignatureBaseData());
+        $signatureDataElements = array_merge($parameters, $signatureBaseData);
         uksort($signatureDataElements, 'strcmp');
 
         $signatureData = [];
@@ -113,7 +127,7 @@ class One extends AuthorizationAbstract
      *
      * @return array
      */
-    private function getSignatureBaseData()
+    private function getSignatureBaseData(): array
     {
         return [
             'oauth_version' => self::OAUTH_VERSION,
@@ -130,21 +144,19 @@ class One extends AuthorizationAbstract
      *
      * @return string
      */
-    private function getNonce()
+    private function getNonce(): string
     {
-        return "pWKbsGInlZ3";
-        //return md5(gethostname() . microtime());
+        return md5(gethostname() . microtime());
     }
 
     /**
      * Timestamp generator
      *
-     * @return string
+     * @return int
      */
-    private function getTimestamp()
+    private function getTimestamp(): int
     {
-        return "1551074666";
-        //return (string) time();
+        return time();
     }
 
 }
