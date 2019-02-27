@@ -3,13 +3,14 @@
 namespace Kristoreed\Twitter;
 
 use Kristoreed\Twitter\Request\Interfaces\RequestInterface;
+use Kristoreed\Twitter\Interfaces\TwitterInterface;
 
 /**
  * Twitter
  *
  * @author Krzysztof Trzcinka
  */
-class Twitter
+class Twitter implements TwitterInterface
 {
     /**
      * Handler of request
