@@ -32,26 +32,27 @@ return [
 ## Examples 
 _List of all Twitter's api endpoints are avalible on https://developer.twitter.com/en/docs/api-reference-index_
 
-### Request to selected endpoint with GET request and Oauth autorization
+### Retrieving user timeline by screen name
+_Request sending to selected endpoint with GET request and Oauth autorization_
 
 ```php
 <?php
 use Kristoreed\Twitter\Authorization\AutorizationOauth;
 use Kristoreed\Twitter\Configuration\Configuration;
 use Kristoreed\Twitter\Request\RequestGet;
-use Kristoreed\Twitter\Twitter as TwitterApi;
+use Kristoreed\Twitter\Twitter;
 
 $configuration = new Configuration($config['twitter']);
 $autorizationOauth = new AutorizationOauth($configuration);
-$requestGet= new RequestGet($configuration, $autorizationOauth);
-$twitter = new TwitterApi($requestGet);
+$requestGet = new RequestGet($configuration, $autorizationOauth);
+$twitter = new Twitter($requestGet);
 $statusesJson = $twitter->tweet('statuses/user_timeline.json', ['screen_name' => 'twitterapi']);
 $statuses = json_decode($statusesJson, true);
 
 ```
 
-### Basic autorization with POST request 
-_Retrieving a bearer token for Oauth2_
+### Retrieving a bearer token for Oauth2 autorization
+_Request sending to selected endpoint with POST request and Basic autorization_
 
 ```php
 <?php
@@ -64,7 +65,8 @@ if(empty($token)) {
     $configuration = new Configuration($config['twitter']);
     $autorizationBasic = new AutorizationBasic($configuration);
     $requestPost = new RequestPost($configuration, $autorizationBasic);
-    $tokenResponseJson = $requestPost->send("oauth2/token", [
+    $twitter = new Twitter($requestPost);
+    $tokenResponseJson = $twitter->tweet("oauth2/token", [
         'grant_type' => 'client_credentials',
     ]);
     $tokenResponse = json_decode($tokenResponseJson, true);
@@ -75,21 +77,40 @@ if(empty($token)) {
 
 ```
 
-### Request to selected endpoint with GET request and Oauth2 autorization 
-_Authorization with bearer token_
+### Retrieving user timeline by screen name
+_Request sending to selected endpoint with GET request and Oauth2 autorization_
 
 ```php
 <?php
 use Kristoreed\Twitter\Authorization\AutorizationOauth2;
 use Kristoreed\Twitter\Configuration\Configuration;
 use Kristoreed\Twitter\Request\RequestGet;
-use Kristoreed\Twitter\Twitter as TwitterApi;
+use Kristoreed\Twitter\Twitter;
 
 $configuration = new Configuration($config['twitter']);
 $autorizationOauth2 = new AutorizationOauth2($configuration, $token);
-$requestGet= new RequestGet($configuration, $autorizationOauth2);
-$twitter = new TwitterApi($requestGet);
+$requestGet = new RequestGet($configuration, $autorizationOauth2);
+$twitter = new Twitter($requestGet);
 $statusesJson = $twitter->tweet('statuses/user_timeline.json', ['screen_name' => 'twitterapi']);
+$statuses = json_decode($statusesJson, true);
+
+```
+
+### Updating user status
+_Request sending to selected endpoint with POST request and Oauth autorization_
+
+```php
+<?php
+use Kristoreed\Twitter\Authorization\AutorizationOauth;
+use Kristoreed\Twitter\Configuration\Configuration;
+use Kristoreed\Twitter\Request\RequestPost;
+use Kristoreed\Twitter\Twitter;
+
+$configuration = new Configuration($config['twitter']);
+$autorizationOauth = new AutorizationOauth($configuration);
+$requestPost = new RequestPost($configuration, $autorizationOauth);
+$twitter = new Twitter($requestPost);
+$statusesJson = $twitter->tweet('statuses/update.json', ['status' => 'Hey Joe!']);
 $statuses = json_decode($statusesJson, true);
 
 ```

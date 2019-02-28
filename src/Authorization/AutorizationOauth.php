@@ -70,8 +70,8 @@ class AutorizationOauth extends AuthorizationAbstract
         $firstElement = true;
         foreach ($signatureDataElementsWithSignature as $elementKey => $element) {
             $elementPair = [
-                urlencode($elementKey),
-                '"' . urlencode($element) . '"',
+                rawurlencode($elementKey),
+                '"' . rawurlencode($element) . '"',
             ];
 
             if ($firstElement) {
@@ -95,8 +95,8 @@ class AutorizationOauth extends AuthorizationAbstract
     private function getSignatureKey(): string
     {
         $signatureKeyElements = [
-            urlencode($this->configuration->getConsumerSecret()),
-            urlencode($this->configuration->getOauthTokenSecret()),
+            rawurlencode($this->configuration->getConsumerSecret()),
+            rawurlencode($this->configuration->getOauthTokenSecret()),
         ];
 
         return implode('&', $signatureKeyElements);
@@ -115,8 +115,8 @@ class AutorizationOauth extends AuthorizationAbstract
         uksort($signatureDataElements, 'strcmp');
 
         $signatureData = [];
-        foreach ($signatureDataElements as $parameter => $value) {
-            $signatureData[] = $parameter . '=' . $value;
+        foreach ($signatureDataElements as $key => $value) {
+            $signatureData[] = rawurlencode($key) . '=' . rawurlencode($value);
         }
 
         return implode('&', $signatureData);
