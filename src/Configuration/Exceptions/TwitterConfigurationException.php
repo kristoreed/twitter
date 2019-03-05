@@ -1,6 +1,6 @@
 <?php
 
-namespace Kristoreed\Twitter\Exceptions;
+namespace Kristoreed\Twitter\Configuration\Exceptions;
 
 use Exception;
 

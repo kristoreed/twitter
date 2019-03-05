@@ -3,7 +3,7 @@
 namespace Kristoreed\Twitter\Configuration;
 
 use Kristoreed\Twitter\Configuration\Interfaces\ConfigurationInterface;
-use Kristoreed\Twitter\Exceptions\TwitterConfigurationException;
+use Kristoreed\Twitter\Configuration\Exceptions\TwitterConfigurationException;
 
 /**
  * Configuration
@@ -120,6 +120,8 @@ class Configuration implements ConfigurationInterface
      * Set api version
      *
      * @param string $apiVersion
+     *
+     * @return Configuration
      */
     public function setApiVersion(string $apiVersion): self
     {
@@ -141,6 +143,8 @@ class Configuration implements ConfigurationInterface
      * Set api host
      *
      * @param string $apiHost
+     *
+     * @return Configuration
      */
     public function setApiHost(string $apiHost): self
     {
@@ -162,6 +166,8 @@ class Configuration implements ConfigurationInterface
      * Set consumer key
      *
      * @param string $consumerKey
+     *
+     * @return Configuration
      */
     public function setConsumerKey(string $consumerKey): self
     {
@@ -183,6 +189,8 @@ class Configuration implements ConfigurationInterface
      * Set consumer secret
      *
      * @param string $consumerSecret
+     *
+     * @return Configuration
      */
     public function setConsumerSecret(string $consumerSecret): self
     {
@@ -204,6 +212,8 @@ class Configuration implements ConfigurationInterface
      * Set oauth token
      *
      * @param string $oauthToken
+     *
+     * @return Configuration
      */
     public function setOauthToken(string $oauthToken): self
     {
@@ -225,6 +235,8 @@ class Configuration implements ConfigurationInterface
      * Set oauth token secret
      *
      * @param string $oauthTokenSecret
+     *
+     * @return Configuration
      */
     public function setOauthTokenSecret(string $oauthTokenSecret): self
     {
@@ -243,9 +255,11 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     *  Set authentication prefix
+     * Set authentication prefix
      *
      * @param array $authenticationPrefix
+     *
+     * @return Configuration
      */
     public function setAuthenticationPrefix(array $authenticationPrefix): self
     {
